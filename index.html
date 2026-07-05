@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LK Vibes — A premium cinematic music player featuring songs in English, Hindi, Telugu, Tamil & Kannada. Stream, search, and enjoy your favorite tracks.">
+  <meta name="keywords" content="music player, LK Vibes, songs, Bollywood, Tollywood, Kollywood, Sandalwood, cinematic">
+  <meta name="author" content="LK Vibes">
+  <title>LK Vibes — Cinematic Music Player</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css?v=1.0.1">
+</head>
+<body>
+
+  <!-- ===== LOADING OVERLAY ===== -->
+  <div class="loading-overlay" id="loading">
+    <div class="loading-logo">LK VIBES</div>
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading your music...</div>
+  </div>
+
+  <!-- ===== DYNAMIC BACKGROUND ===== -->
+  <div class="bg-gradient-layer" id="bgGradient"></div>
+
+  <!-- ===== APP LAYOUT ===== -->
+  <div class="app">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="appHeader">
+      <div class="header-logo" onclick="setActiveView('home')">
+        <div class="logo-icon">🎵</div>
+        <span>LK Vibes</span>
+      </div>
+
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-bar"
+          id="searchInput"
+          placeholder="Search songs, artists, albums..."
+          autocomplete="off"
+          aria-label="Search songs"
+        >
+        <span class="search-icon">🔍</span>
+        <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-btn" id="playlistToggle" data-tooltip="Playlist" aria-label="Toggle playlist">
+          📋
+        </button>
+        <button class="header-btn theme-toggle" id="themeToggle" data-tooltip="Light Mode" aria-label="Toggle theme">
+          🌙
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section-title">Menu</div>
+
+      <div class="sidebar-item active" data-view="home">
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </div>
+      <div class="sidebar-item" data-view="favorites">
+        <span class="icon">❤️</span>
+        <span>Favorites</span>
+        <span class="badge" id="favCount" style="display:none;">0</span>
+      </div>
+      <div class="sidebar-item" data-view="recent">
+        <span class="icon">🕐</span>
+        <span>Recently Played</span>
+      </div>
+      <div class="sidebar-item" data-view="albums">
+        <span class="icon">💿</span>
+        <span>Albums</span>
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-title">Languages</div>
+
+      <div class="sidebar-item" onclick="document.querySelector('.language-chip[data-language=English]')?.click(); setActiveView('home');">
+        <span class="icon">🇬🇧</span>
+        <span>English</span>
+      </div>
+      <div class="sidebar-item" onclick="document.querySelector('.language-chip[data-language=Hindi]')?.click(); setActiveView('home');">
+        <span class="icon">🇮🇳</span>
+        <span>Hindi</span>
+      </div>
+      <div class="sidebar-item" onclick="document.querySelector('.language-chip[data-language=Telugu]')?.click(); setActiveView('home');">
+        <span class="icon">🎬</span>
+        <span>Telugu</span>
+      </div>
+      <div class="sidebar-item" onclick="document.querySelector('.language-chip[data-language=Tamil]')?.click(); setActiveView('home');">
+        <span class="icon">🎭</span>
+        <span>Tamil</span>
+      </div>
+      <div class="sidebar-item" onclick="document.querySelector('.language-chip[data-language=Kannada]')?.click(); setActiveView('home');">
+        <span class="icon">🏛️</span>
+        <span>Kannada</span>
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-title">Shortcuts</div>
+
+      <div class="sidebar-item" style="cursor: default; opacity: 0.7; font-size: 0.8rem;">
+        <span class="icon">⌨️</span>
+        <span>
+          <kbd class="kbd">Space</kbd> Play/Pause<br>
+          <kbd class="kbd">←</kbd><kbd class="kbd">→</kbd> Prev/Next<br>
+          <kbd class="kbd">M</kbd> Mute &nbsp; <kbd class="kbd">L</kbd> Lyrics<br>
+          <kbd class="kbd">F</kbd> Favorite &nbsp; <kbd class="kbd">↑↓</kbd> Vol
+        </span>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent">
+
+      <!-- Hero / Featured Song -->
+      <div class="hero" id="heroSection">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <img class="hero-cover" id="heroCover" src="" alt="Album Cover" onerror="this.style.opacity='0'">
+          <div class="hero-info">
+            <div class="hero-label">✨ NOW FEATURED</div>
+            <h1 class="hero-title" id="heroTitle">Believer</h1>
+            <div class="hero-artist" id="heroArtist">Imagine Dragons</div>
+            <div class="hero-meta">
+              <span id="heroAlbum">Evolve</span>
+              <span class="dot"></span>
+              <span id="heroYear">2017</span>
+              <span class="dot"></span>
+              <span class="lang-badge" id="heroLang">English</span>
+            </div>
+            <button class="hero-play-btn" id="heroPlayBtn">
+              ▶ Play Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Language Filter Chips -->
+      <div class="language-chips" id="languageChips"></div>
+
+      <!-- Category Filter Chips -->
+      <div class="categories-container" id="categoryChips"></div>
+
+      <!-- Songs Grid Section -->
+      <div id="songsSection">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="icon">🎵</span> All Songs
+          </h2>
+          <button class="section-action" onclick="state.activeCategory='All'; state.activeLanguage='All'; renderCategoryChips(); renderLanguageChips(); renderSongsGrid();">
+            Show All
+          </button>
+        </div>
+        <div class="songs-grid" id="songsGrid"></div>
+        <div class="no-results hidden" id="noResults">
+          <div class="icon">🔍</div>
+          <h3>No songs found</h3>
+          <p>Try searching for something else or change the filters.</p>
+        </div>
+      </div>
+
+      <!-- Albums Section -->
+      <div id="albumsSection">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="icon">💿</span> Albums
+          </h2>
+        </div>
+        <div class="albums-scroll" id="albumsScroll"></div>
+      </div>
+
+      <!-- Recently Played Section -->
+      <div id="recentSection">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="icon">🕐</span> Recently Played
+          </h2>
+        </div>
+        <div class="recent-scroll" id="recentScroll"></div>
+      </div>
+
+      <!-- ===== FOOTER ===== -->
+      <footer class="app-footer">
+        <div class="footer-wave">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,60 C200,120 400,0 600,60 C800,120 1000,0 1200,60 L1200,120 L0,120 Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <span class="footer-logo-icon">🎵</span>
+              <span class="footer-logo-text">LK Vibes</span>
+            </div>
+            <p class="footer-tagline">Your cinematic music experience — <span id="footerSongCount">100</span> songs across 5 languages with stunning cinematic poster art.</p>
+            <div class="footer-social">
+              <a href="#" class="footer-social-btn" aria-label="GitHub">🌐</a>
+              <a href="#" class="footer-social-btn" aria-label="Twitter">🐦</a>
+              <a href="#" class="footer-social-btn" aria-label="Instagram">📸</a>
+              <a href="#" class="footer-social-btn" aria-label="YouTube">📺</a>
+            </div>
+          </div>
+
+          <div class="footer-links">
+            <h4>🎵 Features</h4>
+            <ul>
+              <li>🎧 100+ Songs Library</li>
+              <li>🌐 5 Languages</li>
+              <li>🎤 Lyrics Panel</li>
+              <li>❤️ Favorites & Playlists</li>
+              <li>🔀 Shuffle & Repeat</li>
+              <li>🎛️ Equalizer Animation</li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <h4>🌍 Languages</h4>
+            <ul>
+              <li>🇬🇧 English — Pop, Rock, EDM</li>
+              <li>🇮🇳 Hindi — Bollywood</li>
+              <li>🎬 Telugu — Tollywood</li>
+              <li>🎭 Tamil — Kollywood</li>
+              <li>🏛️ Kannada — Sandalwood</li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <h4>⌨️ Shortcuts</h4>
+            <ul>
+              <li><kbd class="kbd">Space</kbd> Play / Pause</li>
+              <li><kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> Prev / Next</li>
+              <li><kbd class="kbd">↑</kbd> <kbd class="kbd">↓</kbd> Volume</li>
+              <li><kbd class="kbd">M</kbd> Mute</li>
+              <li><kbd class="kbd">L</kbd> Lyrics</li>
+              <li><kbd class="kbd">F</kbd> Favorite</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="footer-bottom-inner">
+            <p>Made with ❤️ by <strong>LK Vibes</strong> · Built with HTML, CSS & JavaScript</p>
+            <p class="footer-copy">© 2026 LK Vibes. All rights reserved. Cinematic poster art generated by AI.</p>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- ===== NOW PLAYING BAR ===== -->
+  <div class="now-playing-bar" id="nowPlayingBar">
+    <!-- Cinematic blurred background -->
+    <div class="np-cinematic-bg" id="npBg"></div>
+
+    <!-- Song Info -->
+    <div class="np-song-info">
+      <img class="np-cover" id="npCover" src="" alt="Now Playing" onerror="this.style.display='none';">
+      <div class="np-text">
+        <div class="np-title" id="npTitle">Select a song</div>
+        <div class="np-artist" id="npArtist">—</div>
+      </div>
+      <button class="np-fav-btn" id="npFavBtn" data-tooltip="Favorite" aria-label="Toggle favorite">🤍</button>
+    </div>
+
+    <!-- Center: Controls + Progress -->
+    <div class="np-center">
+      <div class="np-controls">
+        <button class="np-control-btn" id="shuffleBtn" data-tooltip="Shuffle Off" aria-label="Toggle shuffle">🔀</button>
+        <button class="np-control-btn" id="prevBtn" data-tooltip="Previous" aria-label="Previous song">⏮</button>
+        <button class="np-control-btn np-play-btn" id="playBtn" data-tooltip="Play" aria-label="Play or pause">▶️</button>
+        <button class="np-control-btn" id="nextBtn" data-tooltip="Next" aria-label="Next song">⏭</button>
+        <button class="np-control-btn" id="repeatBtn" data-tooltip="Repeat Off" aria-label="Toggle repeat">🔁</button>
+      </div>
+      <div class="np-progress-container">
+        <span class="np-time" id="currentTime">0:00</span>
+        <div class="np-progress-bar" id="progressBar" role="slider" aria-label="Seek bar">
+          <div class="np-progress-fill" id="progressFill" style="width: 0%;"></div>
+        </div>
+        <span class="np-time" id="totalTime">0:00</span>
+      </div>
+    </div>
+
+    <!-- Right: Volume + Extras -->
+    <div class="np-right">
+      <button class="np-right-btn" id="restartBtn" data-tooltip="Restart" aria-label="Restart song">⏪</button>
+      <button class="np-right-btn" id="lyricsBtn" data-tooltip="Lyrics" aria-label="Toggle lyrics">🎤</button>
+      <div class="np-volume-container">
+        <button class="np-right-btn" id="muteBtn" data-tooltip="Mute" aria-label="Toggle mute">🔊</button>
+        <input
+          type="range"
+          class="np-volume-slider"
+          id="volumeSlider"
+          min="0"
+          max="100"
+          value="80"
+          aria-label="Volume"
+        >
+      </div>
+      <div class="equalizer" id="equalizer">
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+      </div>
+      <button class="np-right-btn" id="playlistToggle2" data-tooltip="Playlist" aria-label="Toggle playlist">📋</button>
+    </div>
+  </div>
+
+  <!-- ===== PLAYLIST PANEL ===== -->
+  <div class="playlist-panel" id="playlistPanel">
+    <div class="panel-header">
+      <h3>🎵 Playlist</h3>
+      <button class="panel-close" id="playlistClose" aria-label="Close playlist">✕</button>
+    </div>
+    <div class="playlist-list" id="playlistList"></div>
+  </div>
+
+  <!-- ===== LYRICS PANEL ===== -->
+  <div class="lyrics-overlay" id="lyricsOverlay"></div>
+  <div class="lyrics-panel" id="lyricsPanel">
+    <div class="lyrics-header">
+      <div class="lyrics-header-info">
+        <img class="lyrics-header-cover" id="lyricsCover" src="" alt="Lyrics" onerror="this.style.display='none'">
+        <div class="lyrics-header-text">
+          <h3 id="lyricsTitle">Song Title</h3>
+          <div class="artist" id="lyricsArtist">Artist</div>
+        </div>
+      </div>
+      <button class="panel-close" id="lyricsClose" aria-label="Close lyrics">✕</button>
+    </div>
+    <div class="lyrics-body">
+      <div class="lyrics-text" id="lyricsText">
+        Select a song to view lyrics
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SIDEBAR MOBILE OVERLAY ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ===== SIDEBAR MOBILE TOGGLE ===== -->
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript -->
+  <script src="script.js?v=1.0.1"></script>
+</body>
+</html>
