@@ -1,6 +1,6 @@
 # 🎵 LK Vibes — Cinematic Music Player
 
-A premium, cinematic music player web application built with pure **HTML, CSS & JavaScript**. Features 20 songs across 5 Indian languages with stunning AI-generated cinematic poster album art, glassmorphism UI, and full playback controls.
+A premium, cinematic music player web application built with pure **HTML, CSS & JavaScript**. Features of songs across 5 Indian languages with stunning generated cinematic poster album art, glassmorphism UI, and full playback controls.
 
 ---
 
